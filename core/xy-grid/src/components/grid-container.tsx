@@ -1,45 +1,54 @@
-import React, { PureComponent, ReactNode } from 'react';
-import classNames from 'classnames';
-import { rem } from '@growcss/elaborate';
-import { Gutters as DefaultGutters } from './gutters';
-import { GridContainerElement } from '../styled/grid-container-element';
-import { GridContainerProps, GuttersProps } from '../../types';
+import React, { Children, PureComponent, ReactNode } from 'react';
+import { withTheme } from 'styled-components';
+import GridContainerElement from '../styled/grid-container-element';
+import { GridContainerProps } from '../../types';
 
-interface DefaultGridContainerProps {
-  width: string;
-  gutterSizes: GuttersProps;
-}
+class GridContainer extends PureComponent<
+  GridContainerProps,
+  { childrenCount: number }
+> {
+  /**
+   * @param {GridContainerProps} props
+   */
+  public constructor(props: GridContainerProps) {
+    super(props);
 
-type PropsWithDefaults = GridContainerProps & DefaultGridContainerProps;
+    this.state = {
+      childrenCount: 0,
+    };
+  }
 
-export class GridContainer extends PureComponent<GridContainerProps> {
-  public static defaultProps: DefaultGridContainerProps = {
-    width: rem(1200),
-    gutterSizes: DefaultGutters,
-  };
+  /**
+   * {@inheritdoc}
+   */
+  public componentDidMount(): void {
+    const { children } = this.props;
 
+    Children.toArray(children).forEach((child: ReactNode) => {
+      if (
+        child.type !== undefined &&
+        ['GridX', 'GridY'].includes(child.type.displayName) &&
+        child.props.children !== undefined
+      ) {
+        this.setState({
+          childrenCount: Children.count(child.props.children),
+        });
+      }
+    });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public render(): ReactNode {
-    const { type, children, width, gutterSizes, ...other } = this
-      .props as PropsWithDefaults;
-    const className = classNames('gc-grid-container');
-
-    let maxWidth = width;
-    let gutter: string | number | GuttersProps = gutterSizes;
-
-    if (type === 'fluid' || type === 'full') {
-      maxWidth = '100%';
-    }
-
-    if (type === 'full') {
-      gutter = '0';
-    }
+    const { type, children, className, ...other } = this.props;
+    const { childrenCount } = this.state;
 
     return (
       <GridContainerElement
-        className={className}
-        maxWidth={maxWidth}
-        gutterSizes={gutter}
         type={type}
+        childrenCount={childrenCount}
+        className={className}
         {...other}
       >
         {children}
@@ -47,3 +56,5 @@ export class GridContainer extends PureComponent<GridContainerProps> {
     );
   }
 }
+
+export default withTheme(GridContainer);

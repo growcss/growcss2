@@ -2,14 +2,16 @@
 import * as styledComponents from 'styled-components';
 import { em } from '@growcss/elaborate';
 import normalize from './modern-normalize';
-import { h1, h2, h3, h4, h5, h6 } from './css/typography';
-import { colors } from './css/colors';
+import { h1, h2, h3, h4, h5, h6, typography } from './css/typography';
 import blockquote from './css/blockquote';
 import lists from './css/lists';
 import tables from './css/tables';
 import links from './css/links';
-import image from './components/image';
+import colors from './css/colors';
+import divider from './components/divider';
 import grid from './components/grid';
+import image from './components/image';
+import navigation from './components/navigation';
 import spinner from './components/spinner';
 import { GrowCssTheme } from '../types';
 import { getGutterSize } from './utils/get-gutter-size';
@@ -21,6 +23,7 @@ export { getGutterSize } from './utils/get-gutter-size';
 
 export const GrowCss: GrowCssTheme = {
   global: {
+    borderColor: colors.gray[700],
     // Global value used for margin on components.
     margin: '1rem',
     // Global value used for padding on components.
@@ -29,7 +32,10 @@ export const GrowCss: GrowCssTheme = {
     position: '1rem',
     // Sets the text direction of the CSS. Can be either `ltr` or `rtl`.
     textDirection: 'ltr',
-    printBreakpoint: 'large',
+    breakpoint: {
+      print: 'large',
+      mobile: 'small',
+    },
     // Web standard Pixels per inch. (1ddpx / stdWebDpi) = 1dpi
     // See https://www.w3.org/TR/css-values-3/#absolute-lengths
     stdWebDpi: 96,
@@ -52,30 +58,15 @@ export const GrowCss: GrowCssTheme = {
   body: {
     backgroundColor: colors.white,
   },
-  typography: {
-    // Text color
-    color: colors.black,
-    // Font size attribute applied to `<html>` and `<body>`.
-    fontSize: '16px',
-    // Default line height for all type. "lineHeight" is 24px while fontSize is 16px
-    lineHeight: 1.45,
-    // Font weight used for normal type
-    weightNormal: 600,
-    // Font weight used for bold type
-    weightBold: 'bold',
-    // Set to `true` to enable antialiased type, using the `-webkit-font-smoothing` and `-moz-osx-font-smoothing` CSS properties.
-    antialiased: true,
-    // Font stack of the body.
-    fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-    codeFontFamily:
-      '"SFMono-Medium", "SF Mono", "Segoe UI Mono", "Roboto Mono", "Ubuntu Mono", Menlo, Consolas, Courier, monospace',
-    // Check https://type-scale.com/ for different sizes
-    breakpoints: {
-      small: [2.488, 2.074, 1.728, 1.44, 1.2, 1],
-      medium: [3.052, 2.441, 1.953, 1.563, 1.25, 1],
+  link: {
+    color: {
+      main: colors.blue[500],
+      hover: colors.blue[700],
+      active: colors.blue[300],
+      focus: colors.blue[300],
     },
   },
+  typography,
   colors,
   shadows: {
     default: '0 2px 4px 0 rgba(0,0,0,0.10)',
@@ -94,8 +85,10 @@ export const GrowCss: GrowCssTheme = {
     '40': 40,
     '50': 50,
   },
+  divider,
   grid,
   image,
+  navigation,
   spinner,
 };
 
@@ -111,7 +104,7 @@ const {
 export { styled, css, createGlobalStyle, keyframes, ThemeProvider };
 
 export const GlobalStyle = createGlobalStyle`
-  ${normalize}
+  ${props => normalize(props.theme.global.borderColor)}
 
   body,
   html {
@@ -120,7 +113,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   html {
-    font-size: ${props => em(props.theme.typography.fontSize)};
+    font-size: ${props => props.theme.typography.fontSize};
   }
 
   body {
@@ -140,7 +133,7 @@ export const GlobalStyle = createGlobalStyle`
         : null}
   }
 
-  ${props => links(props.theme.colors)}
+  ${props => links(props.theme.link.color)}
 
   p,
   ul,
@@ -192,7 +185,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   abbr {
-    border-bottom: 1px ${props => props.theme.colors.grey} dotted;
+    border-bottom: 1px ${props => props.theme.colors.gray[500]} dotted;
     cursor: help;
   }
 

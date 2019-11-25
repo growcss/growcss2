@@ -16,7 +16,7 @@
    * path segment in the "$schema" field for all your Rush config files.  This will ensure
    * correct error-underlining and tab-completion for editors such as VS Code.
    */
-  "rushVersion": "5.6.0",
+  "rushVersion": "5.16.1",
 
   /**
    * The next field selects which package manager should be installed and determines its version.
@@ -26,10 +26,7 @@
    * Specify one of: "pnpmVersion", "npmVersion", or "yarnVersion".  See the Rush documentation
    * for details about these alternatives.
    */
-  "pnpmVersion": "2.19.2",
-
-  // "npmVersion": "6.1.0",
-  // "yarnVersion": "1.9.4",
+  "pnpmVersion": "4.1.7",
 
   /**
    * Options that are only used when the PNPM package manager is selected
@@ -95,7 +92,7 @@
    * To remove these restrictions, you could set projectFolderMinDepth=1
    * and set projectFolderMaxDepth to a large number.
    */
-  "projectFolderMinDepth": 2,
+  "projectFolderMinDepth": 1,
   "projectFolderMaxDepth": 2,
 
   /**
@@ -169,7 +166,7 @@
      * you might configure your system's trigger to look for a special string such as "[skip-ci]"
      * in the commit message, and then customize Rush's message to contain that string.
      */
-    "versionBumpCommitMessage": "Applying package updates. [skip-ci]"
+    "versionBumpCommitMessage": "Applying package updates. [skip travis]"
   },
 
   "repository": {
@@ -296,9 +293,9 @@
     //    * locally linked because it would create a cyclic dependency; instead, the last published
     //    * version will be installed in the Common folder.
     //    */
-    //   "cyclicDependencyProjects": [
-    //     // "my-toolchain"
-    //   ],
+    //  "cyclicDependencyProjects": [
+    //    "@growcss/xy-grid",
+    //  ],
     //
     //   /**
     //    * If true, then this project will be ignored by the "rush check" command.
@@ -331,7 +328,7 @@
     //   "packageName": "my-toolchain",
     //   "projectFolder": "tools/my-toolchain",
     //   "reviewCategory": "tools"
-    // }
+    // },
     {
       "packageName": "@build/extended-babel",
       "projectFolder": "build/extended-babel",
@@ -403,6 +400,12 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@growcss/divider",
+      "projectFolder": "core/divider",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@growcss/elaborate",
       "projectFolder": "core/elaborate",
       "reviewCategory": "production",
@@ -411,6 +414,12 @@
     {
       "packageName": "@growcss/image",
       "projectFolder": "core/image",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@growcss/navigation",
+      "projectFolder": "core/navigation",
       "reviewCategory": "production",
       "shouldPublish": true
     },
